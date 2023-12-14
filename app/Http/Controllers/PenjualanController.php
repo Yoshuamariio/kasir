@@ -7,7 +7,8 @@ use App\Models\PenjualanDetail;
 use App\Models\Produk;
 use App\Models\Setting;
 use Illuminate\Http\Request;
-use PDF;
+use Illuminate\Support\Facades\View;
+use Dompdf\Dompdf;
 
 class PenjualanController extends Controller
 {
@@ -146,13 +147,6 @@ class PenjualanController extends Controller
         return response(null, 204);
     }
 
-    public function selesai()
-    {
-        $setting = Setting::first();
-
-        return view('penjualan.selesai', compact('setting'));
-    }
-
     public function notaKecil()
     {
         $setting = Setting::first();
@@ -181,5 +175,26 @@ class PenjualanController extends Controller
         $pdf = PDF::loadView('penjualan.nota_besar', compact('setting', 'penjualan', 'detail'));
         $pdf->setPaper(0,0,609,440, 'potrait');
         return $pdf->stream('Transaksi-'. date('Y-m-d-his') .'.pdf');
+    }
+    public function selesai()
+    {
+        $setting = Setting::first();
+
+        // $htmlNota = View::make('penjualan.nota_kecil', compact('setting'))->render();
+
+        // echo($htmlNota);
+        $htmlNota = $this->notaKecil();
+        $pdf = new Dompdf();
+        $pdf->loadHtml($htmlNota);
+        $pdf->setPaper(0, 0, 70, 500, 'potrait');
+        $pdf->render();
+        $pdfContent = $pdf->output();
+        $timestamp = date('Y-m-d_H-i-s');
+        $fileName = 'nota_' . $timestamp . '.pdf';
+        $fileLocation = storage_path('app/' . $fileName);
+        file_put_contents($fileLocation, $pdfContent);
+
+
+        return view('penjualan.selesai', compact('setting'));
     }
 }
