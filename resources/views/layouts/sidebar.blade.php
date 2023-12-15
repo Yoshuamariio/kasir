@@ -41,12 +41,7 @@
             </li>
             <li class="header">TRANSAKSI</li>
             <li>
-                <a href="{{ route('transaksi.baru') }}">
-                    <i class="fa fa-cart-arrow-down"></i> <span>Transaksi</span>
-                </a>
-            </li> 
-            <li>
-                <a href="{{ route('transaksi.index') }}">
+                <a href="{{ route('rolling.index') }}">
                     <i class="fa fa-refresh"></i></i> <span>Sistem Rolling</span>
                 </a>
             </li>            
@@ -72,10 +67,11 @@
                     <i class="fa fa-cogs"></i> <span>Pengaturan</span>
                 </a>
             </li>
-            @else
+            @endif
+            @if (auth()->user()->level == 2)
             <li class="header">TRANSAKSI</li>
             <li>
-                <a href="{{ route('transaksi.index') }}">
+                <a href="{{ route('rolling.index') }}">
                     <i class="fa fa-cart-arrow-down"></i> <span>Sistem Rolling</span>
                 </a>
             </li>
@@ -90,6 +86,19 @@
                 </a>
             </li>
             <li class="header">SYSTEM</li>
+            <li>
+                <a href="{{ route('laporan.index') }}">
+                    <i class="fa fa-file-pdf-o"></i> <span>Laporan</span>
+                </a>
+            </li>
+            @endif
+            @if (auth()->user()->level == 3)
+            <li class="header">MENU</li>
+            <li>
+                <a href="{{ route('rolling.index') }}">
+                    <i class="fa fa-cart-arrow-down"></i> <span>Sistem Rolling</span>
+                </a>
+            </li>
             <li>
                 <a href="{{ route('laporan.index') }}">
                     <i class="fa fa-file-pdf-o"></i> <span>Laporan</span>
