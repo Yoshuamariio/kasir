@@ -1,43 +1,152 @@
-<div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form">
-    <div class="modal-dialog modal-lg" role="document">
-        <form action="" method="post" class="form-horizontal">
-            @csrf
-            @method('post')
+@extends('layouts.master')
 
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title"></h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group row">
-                        <label for="nama" class="col-lg-2 col-lg-offset-1 control-label">Nama Warung</label>
-                        <div class="col-lg-6">
-                            <input type="text" name="nama" id="nama" class="form-control" required autofocus>
-                            <span class="help-block with-errors"></span>
+@section('title')
+    Sistem Rolling
+@endsection
+
+@section('breadcrumb')
+    @parent
+    <li class="active">Sistem Rolling</li>
+@endsection
+
+@section('content')
+<style>
+    .custom-bg {
+        background-color: #75230a; /* Ganti dengan warna yang diinginkan */
+        color: #fff; /* Warna teks */
+    }
+</style>
+<div class="row">
+    <div class="col-lg-12">        
+           <div class="row">
+            @foreach($allData as $member)
+                <div class="col-md-2">
+                     <div class="card text-center mb-3" style="border: 2px solid #3498db; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $member->nama }}</h5>
+                            <p class="card-text">
+                                Kode: {{ $member->kode_member }}<br>
+                                Telepon: {{ $member->telepon }}<br>
+                                Pengelola: {{ $member->alamat }}<br>
+                                Rolling: {{ $member ->status_warung }}
+                            </p>
+                        </div>
+                        <div class="card-footer {{ $member->status_warung == 1 ? 'custom-bg' : 'bg-primary' }} text-white" style="border-radius: 0 0 15px 15px;">
+                            <small>Rolling</small>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label for="telepon" class="col-lg-2 col-lg-offset-1 control-label">Telepon</label>
-                        <div class="col-lg-6">
-                            <input type="text" name="telepon" id="telepon" class="form-control" required>
-                            <span class="help-block with-errors"></span>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="alamat" class="col-lg-2 col-lg-offset-1 control-label">Nama Pengelola</label>
-                        <div class="col-lg-6">
-                            <textarea name="alamat" id="alamat" rows="3" class="form-control"></textarea>
-                            <span class="help-block with-errors"></span>
-                        </div>
-                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-save"></i> Simpan</button>
-                    <button type="button" class="btn btn-sm btn-flat btn-warning" data-dismiss="modal"><i class="fa fa-arrow-circle-left"></i> Batal</button>
-                </div>
-            </div>
-        </form>
+            @endforeach        
+    </div>
     </div>
 </div>
+
+@includeIf('member.form')
+@endsection
+
+@push('scripts')
+<script>
+    let table;
+    // const isiPesan = '{{ $allData }}';
+    // console.log(isiPesan);
+    
+
+    $(function () {
+        table = $('.table').DataTable({
+            responsive: true,
+            processing: true,
+            serverSide: true,
+            autoWidth: false,
+            ajax: {
+                url: '{{ route('member.data') }}',
+            },
+            columns: [
+                {data: 'select_all', searchable: false, sortable: false},
+                {data: 'DT_RowIndex', searchable: false, sortable: false},
+                {data: 'kode_member'},
+                {data: 'nama'},
+                {data: 'telepon'},
+                {data: 'alamat'},
+                {data: 'aksi', searchable: false, sortable: false},
+            ]
+        });
+
+        $('#modal-form').validator().on('submit', function (e) {
+            if (! e.preventDefault()) {
+                $.post($('#modal-form form').attr('action'), $('#modal-form form').serialize())
+                    .done((response) => {
+                        $('#modal-form').modal('hide');
+                        table.ajax.reload();
+                    })
+                    .fail((errors) => {
+                        alert('Tidak dapat menyimpan data');
+                        return;
+                    });
+            }
+        });
+
+        $('[name=select_all]').on('click', function () {
+            $(':checkbox').prop('checked', this.checked);
+        });
+    });
+
+    function addForm(url) {
+        $('#modal-form').modal('show');
+        $('#modal-form .modal-title').text('Tambah Member');
+
+        $('#modal-form form')[0].reset();
+        $('#modal-form form').attr('action', url);
+        $('#modal-form [name=_method]').val('post');
+        $('#modal-form [name=nama]').focus();
+    }
+
+    function editForm(url) {
+        $('#modal-form').modal('show');
+        $('#modal-form .modal-title').text('Edit Member');
+
+        $('#modal-form form')[0].reset();
+        $('#modal-form form').attr('action', url);
+        $('#modal-form [name=_method]').val('put');
+        $('#modal-form [name=nama]').focus();
+
+        $.get(url)
+            .done((response) => {
+                $('#modal-form [name=nama]').val(response.nama);
+                $('#modal-form [name=telepon]').val(response.telepon);
+                $('#modal-form [name=alamat]').val(response.alamat);
+            })
+            .fail((errors) => {
+                alert('Tidak dapat menampilkan data');
+                return;
+            });
+    }
+
+    function deleteData(url) {
+        if (confirm('Yakin ingin menghapus data terpilih?')) {
+            $.post(url, {
+                    '_token': $('[name=csrf-token]').attr('content'),
+                    '_method': 'delete'
+                })
+                .done((response) => {
+                    table.ajax.reload();
+                })
+                .fail((errors) => {
+                    alert('Tidak dapat menghapus data');
+                    return;
+                });
+        }
+    }
+
+    function cetakMember(url) {
+        if ($('input:checked').length < 1) {
+            alert('Pilih data yang akan dicetak');
+            return;
+        } else {
+            $('.form-member')
+                .attr('target', '_blank')
+                .attr('action', url)
+                .submit();
+        }
+    }
+</script>
+@endpush

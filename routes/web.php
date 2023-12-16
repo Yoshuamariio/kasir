@@ -6,14 +6,10 @@ use App\Http\Controllers\{
     LaporanController,
     ProdukController,
     MemberController,
-    PengeluaranController,
-    PembelianController,
-    PembelianDetailController,
     PenjualanController,
     PenjualanDetailController,
     RollingController,
     SettingController,
-    SupplierController,
     UserController,
 };
 use Illuminate\Support\Facades\Route;
@@ -56,22 +52,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/setting/first', [SettingController::class, 'show'])->name('setting.show');
         Route::post('/setting', [SettingController::class, 'update'])->name('setting.update');
 
-        // Route::get('/supplier/data', [SupplierController::class, 'data'])->name('supplier.data');
-        // Route::resource('/supplier', SupplierController::class);
-
-        // Route::get('/pengeluaran/data', [PengeluaranController::class, 'data'])->name('pengeluaran.data');
-        // Route::resource('/pengeluaran', PengeluaranController::class);
-
-        // Route::get('/pembelian/data', [PembelianController::class, 'data'])->name('pembelian.data');
-        // Route::get('/pembelian/{id}/create', [PembelianController::class, 'create'])->name('pembelian.create');
-        // Route::resource('/pembelian', PembelianController::class)
-        //     ->except('create');
-
-        // Route::get('/pembelian_detail/{id}/data', [PembelianDetailController::class, 'data'])->name('pembelian_detail.data');
-        // Route::get('/pembelian_detail/loadform/{diskon}/{total}', [PembelianDetailController::class, 'loadForm'])->name('pembelian_detail.load_form');
-        // Route::resource('/pembelian_detail', PembelianDetailController::class)
-        //     ->except('create', 'show', 'edit');
-
     });
 
     Route::group(['middleware' => 'level:2'], function () {
@@ -86,10 +66,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('/transaksi', PenjualanDetailController::class)
             ->except('create', 'show', 'edit');
 
-        Route::get('/penjualan/data', [PenjualanController::class, 'data'])->name('penjualan.data');
-        Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
-        Route::get('/penjualan/{id}', [PenjualanController::class, 'show'])->name('penjualan.show');
-        Route::delete('/penjualan/{id}', [PenjualanController::class, 'destroy'])->name('penjualan.destroy');
     });
 
     Route::group(['middleware' => 'level:1,2,3'], function () {
@@ -98,6 +74,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/laporan/pdf/{awal}/{akhir}', [LaporanController::class, 'exportPDF'])->name('laporan.export_pdf');
 
         Route::get('/rolling', [RollingController::class, 'index'])->name('rolling.index');
+
+        Route::get('/penjualan/data', [PenjualanController::class, 'data'])->name('penjualan.data');
+        Route::get('/penjualan', [PenjualanController::class, 'index'])->name('penjualan.index');
+        Route::get('/penjualan/{id}', [PenjualanController::class, 'show'])->name('penjualan.show');
+        Route::delete('/penjualan/{id}', [PenjualanController::class, 'destroy'])->name('penjualan.destroy');
 
     });
  

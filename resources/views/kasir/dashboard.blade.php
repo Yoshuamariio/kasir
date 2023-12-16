@@ -17,7 +17,8 @@
             <div class="box-body text-center">
                 <h1>Selamat Datang</h1>
                 <br><br>
-                <a href="{{ route('transaksi.baru') }}" class="btn btn-success btn-lg">Transaksi Baru</a>
+                <a href="{{ route('rolling.index') }}" class="btn btn-success btn-lg">Sistem Rolling</a>
+                <a href="{{ route('laporan.index') }}" class="btn btn-success btn-lg">Laporan</a>
                 <br><br><br>
             </div>
         </div>

@@ -72,7 +72,7 @@
             <li class="header">TRANSAKSI</li>
             <li>
                 <a href="{{ route('rolling.index') }}">
-                    <i class="fa fa-cart-arrow-down"></i> <span>Sistem Rolling</span>
+                    <i class="fa fa-refresh"></i> <span>Sistem Rolling</span>
                 </a>
             </li>
             <li>
@@ -96,7 +96,7 @@
             <li class="header">MENU</li>
             <li>
                 <a href="{{ route('rolling.index') }}">
-                    <i class="fa fa-cart-arrow-down"></i> <span>Sistem Rolling</span>
+                    <i class="fa fa-refresh"></i> <span>Sistem Rolling</span>
                 </a>
             </li>
             <li>

@@ -63,10 +63,10 @@
     <br>
     <div>
         <p style="float: left; padding-right: 25px;">{{ $penjualan->nama_pelanggan }}</p>
+        {{-- <p style="float: left">{{ $member->id_member }}</p> --}}
     </div>
     <div>
-        <p style="float: left;">{{ $penjualan->no_tempat_duduk }}</p>
-        {{-- <p style="float: right">{{ $warung->Nama }}</p> --}}
+        <p style="float: left;">{{ $penjualan->no_tempat_duduk }}</p>        
     </div>
     <div>        
         <p style="float: right">{{ strtoupper(auth()->user()->name) }}</p>
@@ -127,6 +127,10 @@
                 body.scrollHeight, body.offsetHeight,
                 html.clientHeight, html.scrollHeight, html.offsetHeight
             );
+        
+        // const idmember = '{{ $member }}';
+        // console.log(idmember);
+
 
         document.cookie = "innerHeight=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         document.cookie = "innerHeight="+ ((height + 50) * 0.264583);

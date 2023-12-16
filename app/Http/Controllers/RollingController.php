@@ -16,7 +16,8 @@ class RollingController extends Controller
      */
     public function index()
     {
-        return view('rolling.index');
+        $allData = Member::all();
+        return view('rolling.index', compact('allData'));
     }
 
     public function data()

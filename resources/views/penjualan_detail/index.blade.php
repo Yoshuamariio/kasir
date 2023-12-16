@@ -161,6 +161,14 @@
 <script>
     let table, table2;
 
+
+    // Untuk mengurutkan Warung berdasarkan Kodenya
+    $(document).ready(function(){
+        $('.table-member').DataTable({
+            "order": [[1, 'asc']] // Urutkan berdasarkan kolom kedua (indeks 1) yaitu 'kode_member'
+        });
+    });
+
     $(function () {
         $('body').addClass('sidebar-collapse');
 
