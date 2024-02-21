@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Member;
+use App\Models\Warung;
 use App\Models\Penjualan;
 use App\Models\PenjualanDetail;
 use App\Models\Produk;
@@ -11,18 +11,22 @@ use Illuminate\Http\Request;
 
 class PenjualanDetailController extends Controller
 {
+    // Menampilkan halaman transaksi detail.
+
     public function index()
     {
+        // Mendapatkan data produk, warung, dan diskon dari model.
         $produk = Produk::orderBy('nama_produk')->get();
-        $member = Member::orderBy('nama')->get();
+        $warung = Warung::orderBy('nama')->get();
         $diskon = Setting::first()->diskon ?? 0;
 
         // Cek apakah ada transaksi yang sedang berjalan
         if ($id_penjualan = session('id_penjualan')) {
             $penjualan = Penjualan::find($id_penjualan);
-            $memberSelected = $penjualan->member ?? new Member();
+            $warungSelected = $penjualan->warung ?? new Warung();
 
-            return view('penjualan_detail.index', compact('produk', 'member', 'diskon', 'id_penjualan', 'penjualan', 'memberSelected'));
+            // Mengembalikan tampilan dengan data yang diperlukan.
+            return view('penjualan_detail.index', compact('produk', 'warung', 'diskon', 'id_penjualan', 'penjualan', 'warungSelected'));
         } else {
             if (auth()->user()->level == 1) {
                 return redirect()->route('transaksi.baru');
@@ -32,8 +36,10 @@ class PenjualanDetailController extends Controller
         }
     }
 
+    // Mendapatkan data transaksi detail untuk DataTables.
     public function data($id)
     {
+        // // Mendapatkan detail transaksi berdasarkan ID transaksi.
         $detail = PenjualanDetail::with('produk')
             ->where('id_penjualan', $id)
             ->get();
@@ -55,9 +61,12 @@ class PenjualanDetailController extends Controller
                                 </div>';
             $data[] = $row;
 
+            // Menghitung total dan total item.
             $total += $item->harga_jual * $item->jumlah - (($item->diskon * $item->jumlah) / 100 * $item->harga_jual);;
             $total_item += $item->jumlah;
         }
+
+         // Menambahkan data total dan total item pada akhir DataTables.
         $data[] = [
             'kode_produk' => '
                 <div class="total hide">'. $total .'</div>
@@ -77,13 +86,16 @@ class PenjualanDetailController extends Controller
             ->make(true);
     }
 
+    // Menyimpan data transaksi detail baru.
     public function store(Request $request)
     {
+        // Mendapatkan data produk berdasarkan ID produk.
         $produk = Produk::where('id_produk', $request->id_produk)->first();
         if (! $produk) {
             return response()->json('Data gagal disimpan', 400);
         }
 
+        // Menyimpan data transaksi detail baru.
         $detail = new PenjualanDetail();
         $detail->id_penjualan = $request->id_penjualan;
         $detail->id_produk = $produk->id_produk;
@@ -96,24 +108,30 @@ class PenjualanDetailController extends Controller
         return response()->json('Data berhasil disimpan', 200);
     }
 
+    //  Mengupdate data transaksi detail.
     public function update(Request $request, $id)
     {
+        // // Mendapatkan data transaksi detail berdasarkan ID.
         $detail = PenjualanDetail::find($id);
         $detail->jumlah = $request->jumlah;
         $detail->subtotal = $detail->harga_jual * $request->jumlah - (($detail->diskon * $request->jumlah) / 100 * $detail->harga_jual);;
         $detail->update();
     }
 
+    // Menghapus data transaksi detail.
     public function destroy($id)
     {
+        // Mendapatkan data transaksi detail berdasarkan ID.
         $detail = PenjualanDetail::find($id);
         $detail->delete();
 
         return response(null, 204);
     }
 
+    // Memuat data untuk formulir transaksi.
     public function loadForm($diskon = 0, $total = 0, $diterima = 0)
     {
+        // Menghitung total bayar dan kembalian.
         $bayar   = $total - ($diskon / 100 * $total);
         $kembali = ($diterima != 0) ? $diterima - $bayar : 0;
         $data    = [

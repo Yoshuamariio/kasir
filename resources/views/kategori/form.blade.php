@@ -1,27 +1,40 @@
+<!-- Modal Form for Category -->
 <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form">
     <div class="modal-dialog modal-lg" role="document">
+        <!-- Form for Adding or Editing Category -->
         <form action="" method="post" class="form-horizontal">
-            @csrf
-            @method('post')
+            @csrf <!-- CSRF Protection -->
+            @method('post') <!-- HTTP Method Spoofing for Update/Put/Patch -->
 
             <div class="modal-content">
+                <!-- Modal Header -->
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                     <h4 class="modal-title"></h4>
                 </div>
+
+                <!-- Modal Body -->
                 <div class="modal-body">
                     <div class="form-group row">
+                        <!-- Category Name Input -->
                         <label for="nama_kategori" class="col-lg-2 col-lg-offset-1 control-label">Kategori</label>
                         <div class="col-lg-6">
                             <input type="text" name="nama_kategori" id="nama_kategori" class="form-control" required autofocus>
-                            <span class="help-block with-errors"></span>
+                            <span class="help-block with-errors"></span> <!-- Error Message Display -->
                         </div>
                     </div>
                 </div>
+
+                <!-- Modal Footer -->
                 <div class="modal-footer">
+                    <!-- Submit Button -->
                     <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-save"></i> Simpan</button>
-                    <button type="button" class="btn btn-sm btn-flat btn-warning" data-dismiss="modal"><i class="fa fa-arrow-circle-left"></i> Batal</button>
+                    <!-- Close Button -->
+                    <button type="button" class="btn btn-sm btn-flat btn-warning" data-dismiss="modal">
+                        <i class="fa fa-arrow-circle-left"></i> Batal
+                    </button>
                 </div>
             </div>
         </form>

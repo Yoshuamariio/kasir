@@ -22,6 +22,8 @@
                         <th width="5%">No</th>
                         <th>Nama</th>
                         <th>Email</th>
+                        <th>Role</th>
+                        <th>ID</th>
                         <th width="15%"><i class="fa fa-cog"></i></th>
                     </thead>
                 </table>
@@ -30,7 +32,7 @@
     </div>
 </div>
 
-@includeIf('user.form')
+@includeIf('user.form') <!-- Include formulir user -->
 @endsection
 
 @push('scripts')
@@ -38,6 +40,7 @@
     let table;
 
     $(function () {
+        // Inisialisasi DataTable
         table = $('.table').DataTable({
             responsive: true,
             processing: true,
@@ -50,10 +53,13 @@
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
                 {data: 'name'},
                 {data: 'email'},
+                {data: 'level'},
+                {data: 'id_warung'},
                 {data: 'aksi', searchable: false, sortable: false},
             ]
         });
 
+        // submit form
         $('#modal-form').validator().on('submit', function (e) {
             if (! e.preventDefault()) {
                 $.post($('#modal-form form').attr('action'), $('#modal-form form').serialize())
@@ -69,6 +75,7 @@
         });
     });
 
+    // Fungsi untuk menampilkan formulir tambah user
     function addForm(url) {
         $('#modal-form').modal('show');
         $('#modal-form .modal-title').text('Tambah User');
@@ -77,10 +84,12 @@
         $('#modal-form form').attr('action', url);
         $('#modal-form [name=_method]').val('post');
         $('#modal-form [name=name]').focus();
+        $('#modal-form [name=id_warung]').focus();
 
         $('#password, #password_confirmation').attr('required', true);
     }
 
+    // Fungsi untuk menampilkan formulir edit user
     function editForm(url) {
         $('#modal-form').modal('show');
         $('#modal-form .modal-title').text('Edit User');
@@ -92,17 +101,21 @@
 
         $('#password, #password_confirmation').attr('required', false);
 
+        // Mengambil data user untuk diisi ke dalam formulir
         $.get(url)
             .done((response) => {
                 $('#modal-form [name=name]').val(response.name);
                 $('#modal-form [name=email]').val(response.email);
+                // $('#modal-form [name=password]').val(response.password);
+                $('#modal-form [name=level]').val(response.level);
             })
             .fail((errors) => {
                 alert('Tidak dapat menampilkan data');
                 return;
             });
     }
-
+    
+    // Fungsi untuk menghapus data user
     function deleteData(url) {
         if (confirm('Yakin ingin menghapus data terpilih?')) {
             $.post(url, {

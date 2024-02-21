@@ -15,7 +15,7 @@ class BuatPenjualanTable extends Migration
     {
         Schema::create('penjualan', function (Blueprint $table) {
             $table->increments('id_penjualan');
-            $table->integer('id_member');
+            $table->integer('id_warung');
             $table->integer('total_item');
             $table->integer('total_harga');
             $table->string('nama_pelanggan');
@@ -24,6 +24,7 @@ class BuatPenjualanTable extends Migration
             $table->integer('bayar')->default(0);
             $table->integer('diterima')->default(0);
             $table->integer('id_user');
+            $table->string('keterangan');
             $table->timestamps();
         });
     }

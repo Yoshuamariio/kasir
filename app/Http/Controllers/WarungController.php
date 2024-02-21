@@ -7,39 +7,43 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use PDF;
 
-class RollingController extends Controller
+class WarungController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
+    // Menampilkan halaman index warung.
     public function index()
     {
-        $allData = Warung::all();
-        return view('rolling.index', compact('allData'));
+        return view('warung.index');
     }
 
+    //  Mendapatkan data warung untuk DataTables.
     public function data()
     {
+        // // Mengambil data warung yang diurutkan berdasarkan kode_warung.
         $warung = Warung::orderBy('kode_warung')->get();
 
+        // Mengembalikan data warung dalam format DataTables.
         return datatables()
             ->of($warung)
             ->addIndexColumn()
             ->addColumn('select_all', function ($produk) {
                 return '
-                    <input type="checkbox" name="id_warung[]" value="' . $produk->id_warung . '">
+                    <input type="checkbox" name="id_warung[]" value="'. $produk->id_warung .'">
                 ';
             })
             ->addColumn('kode_warung', function ($warung) {
-                return '<span class="label label-success">' . $warung->kode_warung . '<span>';
+                return '<span class="label label-success">'. $warung->kode_warung .'<span>';
             })
             ->addColumn('aksi', function ($warung) {
                 return '
                 <div class="btn-group">
-                    <button type="button" onclick="editForm(`' . route('warung.update', $warung->id_warung) . '`)" class="btn btn-xs btn-info btn-flat"><i class="fa fa-pencil"></i></button>
-                    <button type="button" onclick="deleteData(`' . route('warung.destroy', $warung->id_warung) . '`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button>
+                    <button type="button" onclick="editForm(`'. route('warung.update', $warung->id_warung) .'`)" class="btn btn-xs btn-info btn-flat"><i class="fa fa-pencil"></i></button>
+                    <button type="button" onclick="deleteData(`'. route('warung.destroy', $warung->id_warung) .'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button>
                 </div>
                 ';
             })
@@ -63,16 +67,18 @@ class RollingController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    //  Menyimpan data warung baru.
     public function store(Request $request)
     {
         $warung = Warung::latest()->first() ?? new Warung();
-        $kode_warung = (int) $warung->kode_warung + 1;
+        $kode_warung = (int) $warung->kode_warung +1;
 
         $warung = new Warung();
         $warung->kode_warung = tambah_nol_didepan($kode_warung, 5);
         $warung->nama = $request->nama;
         $warung->telepon = $request->telepon;
-        $warung->alamat = $request->alamat;
+        $warung->pengelola = $request->pengelola;
         $warung->save();
 
         return response()->json('Data berhasil disimpan', 200);
@@ -84,6 +90,8 @@ class RollingController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
+
+    //  Menampilkan data warung berdasarkan ID.
     public function show($id)
     {
         $warung = Warung::find($id);
@@ -109,6 +117,8 @@ class RollingController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
+
+    //  Mengupdate data warung berdasarkan ID.
     public function update(Request $request, $id)
     {
         $warung = Warung::find($id)->update($request->all());
@@ -122,6 +132,8 @@ class RollingController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
+
+    //  Menghapus data warung berdasarkan ID.
     public function destroy($id)
     {
         $warung = Warung::find($id);
@@ -130,20 +142,5 @@ class RollingController extends Controller
         return response(null, 204);
     }
 
-    // public function cetakMember(Request $request)
-    // {
-    //     $datamember = collect(array());
-    //     foreach ($request->id_member as $id) {
-    //         $member = Member::find($id);
-    //         $datamember[] = $member;
-    //     }
 
-    //     $datamember = $datamember->chunk(2);
-    //     $setting    = Setting::first();
-
-    //     $no  = 1;
-    //     $pdf = PDF::loadView('member.cetak', compact('datamember', 'no', 'setting'));
-    //     $pdf->setPaper(array(0, 0, 566.93, 850.39), 'potrait');
-    //     return $pdf->stream('member.pdf');
-    // }
 }

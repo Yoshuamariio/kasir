@@ -11,9 +11,8 @@
 
 @push('scripts')
 <script>
-    // tambahkan untuk delete cookie innerHeight terlebih dahulu
-    document.cookie = "innerHeight=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     
+    // Fungsi untuk mengirim nota melalui WhatsApp
     function kirimNotaWhatsApp() {
         // // Use PHP variables in JavaScript
         // const nomorWhatsApp = '6282228017726';
@@ -23,21 +22,21 @@
 
         // // Buka tautan WhatsApp pada jendela baru
         // window.open(tautanWhatsApp, '_blank');
-        // const isiPesan = '{{ $currentMember->id }}';
-        const isiPesan = '{{ $nextMember }}';
+        const isiPesan = '{{ $nextWarung }}';
         console.log(isiPesan);
         
-
     }
 
+    // Fungsi untuk membuka popup untuk mencetak nota kecil
     function notaKecil(url, title) {
         popupCenter(url, title, 625, 500);
     }
 
-    function notaBesar(url, title) {
-        popupCenter(url, title, 900, 675);
-    }
+    // function notaBesar(url, title) {
+    //     popupCenter(url, title, 900, 675);
+    // }
 
+    // Fungsi untuk membuka popup di tengah layar
     function popupCenter(url, title, w, h) {
         const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
         const dualScreenTop  = window.screenTop  !==  undefined ? window.screenTop  : window.screenY;
@@ -79,7 +78,7 @@
                 @else
                 <button class="btn btn-warning btn-flat" onclick="notaBesar('{{ route('transaksi.nota_besar') }}', 'Nota PDF')">Cetak Ulang Nota</button>
                 @endif
-                <button class="btn btn-danger btn-flat" onclick=kirimNotaWhatsApp()>Kirim Nota</button>
+                {{-- <button class="btn btn-danger btn-flat" onclick=kirimNotaWhatsApp()>Kirim Nota</button> --}}
                 <a href="{{ route('transaksi.baru') }}" class="btn btn-primary btn-flat">Transaksi Baru</a>
             </div>
         </div>

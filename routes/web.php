@@ -5,7 +5,7 @@ use App\Http\Controllers\{
     KategoriController,
     LaporanController,
     ProdukController,
-    MemberController,
+    WarungController,
     PenjualanController,
     PenjualanDetailController,
     RollingController,
@@ -41,9 +41,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/produk/cetak-barcode', [ProdukController::class, 'cetakBarcode'])->name('produk.cetak_barcode');
         Route::resource('/produk', ProdukController::class);
 
-        Route::get('/member/data', [MemberController::class, 'data'])->name('member.data');
-        Route::post('/member/cetak-member', [MemberController::class, 'cetakMember'])->name('member.cetak_member');
-        Route::resource('/member', MemberController::class);
+        Route::get('/warung/data', [WarungController::class, 'data'])->name('warung.data');
+        // Route::post('/warung/cetak-warung', [WarungController::class, 'cetakWarung'])->name('warung.cetak_warung');
+        Route::resource('/warung', WarungController::class);
 
         Route::get('/user/data', [UserController::class, 'data'])->name('user.data');
         Route::resource('/user', UserController::class);
@@ -67,6 +67,11 @@ Route::group(['middleware' => 'auth'], function () {
             ->except('create', 'show', 'edit');
 
     });
+
+    // Route::group(['middleware' => 'level:3'], function () {
+    //     Route::get('/transaksi', [UserController::class, 'profil'])->name('user.profil');
+    //     Route::post('/transaksi/selesai', [UserController::class, 'updateProfil'])->name('user.update_profil');
+    // });
 
     Route::group(['middleware' => 'level:1,2,3'], function () {
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');

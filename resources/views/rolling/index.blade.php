@@ -19,19 +19,19 @@
 <div class="row">
     <div class="col-lg-12">        
            <div class="row">
-            @foreach($allData as $member)
+            @foreach($allData as $warung)
                 <div class="col-md-2">
                      <div class="card text-center mb-3" style="border: 2px solid #3498db; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
                         <div class="card-body">
-                            <h5 class="card-title">{{ $member->nama }}</h5>
+                            <h5 class="card-title">{{ $warung->nama }}</h5>
                             <p class="card-text">
-                                Kode: {{ $member->kode_member }}<br>
-                                Telepon: {{ $member->telepon }}<br>
-                                Pengelola: {{ $member->alamat }}<br>
-                                Rolling: {{ $member ->status_warung }}
+                                Kode: {{ $warung->kode_warung }}<br>
+                                Telepon: {{ $warung->telepon }}<br>
+                                Pengelola: {{ $warung->pengelola }}<br>
+                                Rolling: {{ $warung ->status_warung }}
                             </p>
                         </div>
-                        <div class="card-footer {{ $member->status_warung == 1 ? 'custom-bg' : 'bg-primary' }} text-white" style="border-radius: 0 0 15px 15px;">
+                        <div class="card-footer {{ $warung->status_warung == 1 ? 'custom-bg' : 'bg-primary' }} text-white" style="border-radius: 0 0 15px 15px;">
                             <small>Rolling</small>
                         </div>
                     </div>
@@ -41,36 +41,36 @@
     </div>
 </div>
 
-@includeIf('member.form')
+@includeIf('warung.form') <!-- Include formulir warung -->
 @endsection
 
 @push('scripts')
 <script>
     let table;
-    // const isiPesan = '{{ $allData }}';
-    // console.log(isiPesan);
     
 
     $(function () {
+        // Inisialisasi DataTable
         table = $('.table').DataTable({
             responsive: true,
             processing: true,
             serverSide: true,
             autoWidth: false,
             ajax: {
-                url: '{{ route('member.data') }}',
+                url: '{{ route('warung.data') }}',
             },
             columns: [
                 {data: 'select_all', searchable: false, sortable: false},
                 {data: 'DT_RowIndex', searchable: false, sortable: false},
-                {data: 'kode_member'},
+                {data: 'kode_warung'},
                 {data: 'nama'},
                 {data: 'telepon'},
-                {data: 'alamat'},
+                {data: 'pengelola'},
                 {data: 'aksi', searchable: false, sortable: false},
             ]
         });
 
+        // Submit Form
         $('#modal-form').validator().on('submit', function (e) {
             if (! e.preventDefault()) {
                 $.post($('#modal-form form').attr('action'), $('#modal-form form').serialize())
@@ -92,7 +92,7 @@
 
     function addForm(url) {
         $('#modal-form').modal('show');
-        $('#modal-form .modal-title').text('Tambah Member');
+        $('#modal-form .modal-title').text('Tambah Warung');
 
         $('#modal-form form')[0].reset();
         $('#modal-form form').attr('action', url);
@@ -102,7 +102,7 @@
 
     function editForm(url) {
         $('#modal-form').modal('show');
-        $('#modal-form .modal-title').text('Edit Member');
+        $('#modal-form .modal-title').text('Edit Warung');
 
         $('#modal-form form')[0].reset();
         $('#modal-form form').attr('action', url);
@@ -113,7 +113,7 @@
             .done((response) => {
                 $('#modal-form [name=nama]').val(response.nama);
                 $('#modal-form [name=telepon]').val(response.telepon);
-                $('#modal-form [name=alamat]').val(response.alamat);
+                $('#modal-form [name=pengelola]').val(response.pengelola);
             })
             .fail((errors) => {
                 alert('Tidak dapat menampilkan data');
@@ -137,16 +137,5 @@
         }
     }
 
-    function cetakMember(url) {
-        if ($('input:checked').length < 1) {
-            alert('Pilih data yang akan dicetak');
-            return;
-        } else {
-            $('.form-member')
-                .attr('target', '_blank')
-                .attr('action', url)
-                .submit();
-        }
-    }
 </script>
 @endpush

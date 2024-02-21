@@ -16,18 +16,22 @@ class ProdukController extends Controller
      */
     public function index()
     {
+        // Mengambil data kategori untuk ditampilkan pada dropdown.
         $kategori = Kategori::all()->pluck('nama_kategori', 'id_kategori');
 
+        // Mengembalikan view produk.index dengan data kategori.
         return view('produk.index', compact('kategori'));
     }
 
     public function data()
     {
+        // Menggabungkan tabel produk dan kategori.
         $produk = Produk::leftJoin('kategori', 'kategori.id_kategori', 'produk.id_kategori')
             ->select('produk.*', 'nama_kategori')
             // ->orderBy('kode_produk', 'asc')
             ->get();
 
+        // Mengembalikan data produk dalam format DataTables.
         return datatables()
             ->of($produk)
             ->addIndexColumn()
@@ -39,14 +43,8 @@ class ProdukController extends Controller
             ->addColumn('kode_produk', function ($produk) {
                 return '<span class="label label-success">'. $produk->kode_produk .'</span>';
             })
-            ->addColumn('harga_beli', function ($produk) {
-                return format_uang($produk->harga_beli);
-            })
             ->addColumn('harga_jual', function ($produk) {
                 return format_uang($produk->harga_jual);
-            })
-            ->addColumn('stok', function ($produk) {
-                return format_uang($produk->stok);
             })
             ->addColumn('aksi', function ($produk) {
                 return '
@@ -76,6 +74,8 @@ class ProdukController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    //  Menyimpan data produk baru.
     public function store(Request $request)
     {
         $produk = Produk::latest()->first() ?? new Produk();
@@ -92,6 +92,8 @@ class ProdukController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    //  Menampilkan data produk berdasarkan ID.
     public function show($id)
     {
         $produk = Produk::find($id);
@@ -117,6 +119,8 @@ class ProdukController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    //  Mengupdate data produk berdasarkan ID.
     public function update(Request $request, $id)
     {
         $produk = Produk::find($id);
@@ -131,6 +135,8 @@ class ProdukController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    //  Menghapus data produk berdasarkan ID.
     public function destroy($id)
     {
         $produk = Produk::find($id);
@@ -139,6 +145,7 @@ class ProdukController extends Controller
         return response(null, 204);
     }
 
+    //  Menghapus data produk yang dipilih.
     public function deleteSelected(Request $request)
     {
         foreach ($request->id_produk as $id) {
@@ -149,17 +156,4 @@ class ProdukController extends Controller
         return response(null, 204);
     }
 
-    public function cetakBarcode(Request $request)
-    {
-        $dataproduk = array();
-        foreach ($request->id_produk as $id) {
-            $produk = Produk::find($id);
-            $dataproduk[] = $produk;
-        }
-
-        $no  = 1;
-        $pdf = PDF::loadView('produk.barcode', compact('dataproduk', 'no'));
-        $pdf->setPaper('a4', 'potrait');
-        return $pdf->stream('produk.pdf');
-    }
 }

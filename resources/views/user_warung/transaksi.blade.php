@@ -1,4 +1,4 @@
-@extends('layouts.master')
+{{-- @extends('layouts.master')
 
 @section('title')
     Transaksi Penjualan
@@ -159,61 +159,6 @@
 <script>
     let table, table2;
 
-    $(document).ready(function () {
-        // Inisialisasi input pencarian
-        var searchInput = $('#searchProduct');
-
-        // Inisialisasi daftar produk sebagai objek jQuery
-        var productList = $('.row');
-
-        // Tambahkan event listener untuk peristiwa input pada pencarian
-        searchInput.on('input', function () {
-            var searchText = searchInput.val().toLowerCase();
-
-            // Loop melalui setiap elemen produk
-            productList.find('.col-md-4').each(function () {
-                var productText = $(this).text().toLowerCase();
-
-                // Periksa apakah teks pencarian ada dalam teks produk
-                if (productText.indexOf(searchText) !== -1) {
-                    // Tampilkan produk yang sesuai dengan pencarian
-                    $(this).show();
-                } else {
-                    // Sembunyikan produk yang tidak sesuai dengan pencarian
-                    $(this).hide();
-                }
-            });
-        });
-    });
-
-    $(document).ready(function () {
-        // Fungsi untuk menangani pemilihan produk
-        function handleProductSelection() {
-            // Array untuk menyimpan ID produk yang dipilih
-            var selectedProducts = [];
-
-            // Loop melalui setiap checkbox produk
-            $('.product-checkbox:checked').each(function () {
-                // Ambil nilai ID produk dari checkbox yang dipilih
-                var productId = $(this).val();
-                pilihProduk(productId);
-
-                // Tambahkan ID produk ke dalam array selectedProducts
-                selectedProducts.push(productId);
-            });
-
-            // Lakukan tindakan sesuai kebutuhan dengan array selectedProducts
-            console.log("Produk yang dipilih:", selectedProducts);
-            hideProduk();
-            // Anda dapat menambahkan logika atau tindakan lain di sini
-        }
-
-        // Tambahkan event listener untuk peristiwa klik pada tombol "Pilih"
-        $('.btn-primary').on('click', function (e) {
-            e.preventDefault();
-            handleProductSelection();
-        });
-    });
 
     // Untuk mengurutkan Warung berdasarkan Kodenya
     $(document).ready(function(){
@@ -317,24 +262,12 @@
         $('#modal-produk').modal('hide');
     }
 
-    function pilihProduk(id) {
+    function pilihProduk(id, kode) {
         $('#id_produk').val(id);
-        // $('#kode_produk').val(kode);
-        // hideProduk();
+        $('#kode_produk').val(kode);
+        hideProduk();
         tambahProduk();
     }
-
-    // function tambahProduk() {
-    //     $.post('{{ route('transaksi.store') }}', $('.form-produk').serialize())
-    //         .done(response => {
-    //             $('#kode_produk').focus();
-    //             table.ajax.reload(() => loadForm($('#diskon').val()));
-    //         })
-    //         .fail(errors => {
-    //             alert('Tidak dapat menyimpan data');
-    //             return;
-    //         });
-    // }
 
     function tambahProduk() {
         $.post('{{ route('transaksi.store') }}', $('.form-produk').serialize())
@@ -408,4 +341,4 @@
             })
     }
 </script>
-@endpush
+@endpush --}}

@@ -33,10 +33,12 @@
 @endsection
 
 @push('scripts')
+{{-- Bagian script untuk memanipulasi data dengan menggunakan JavaScript --}}
 <script>
     let table;
 
     $(function () {
+        // Inisialisasi DataTable
         table = $('.table').DataTable({
             responsive: true,
             processing: true,
@@ -52,6 +54,7 @@
             ]
         });
 
+        // Menangani submit formulir dengan menggunakan Ajax
         $('#modal-form').validator().on('submit', function (e) {
             if (! e.preventDefault()) {
                 $.post($('#modal-form form').attr('action'), $('#modal-form form').serialize())
@@ -67,6 +70,7 @@
         });
     });
 
+    // Fungsi untuk menampilkan formulir penambahan kategori
     function addForm(url) {
         $('#modal-form').modal('show');
         $('#modal-form .modal-title').text('Tambah Kategori');
@@ -77,6 +81,7 @@
         $('#modal-form [name=nama_kategori]').focus();
     }
 
+    // Fungsi untuk menampilkan formulir pengeditan kategori
     function editForm(url) {
         $('#modal-form').modal('show');
         $('#modal-form .modal-title').text('Edit Kategori');
@@ -86,6 +91,7 @@
         $('#modal-form [name=_method]').val('put');
         $('#modal-form [name=nama_kategori]').focus();
 
+        // Mengambil data kategori yang dipilih dan mengisinya ke dalam formulir
         $.get(url)
             .done((response) => {
                 $('#modal-form [name=nama_kategori]').val(response.nama_kategori);
@@ -96,6 +102,7 @@
             });
     }
 
+    // Fungsi untuk menghapus data kategori menggunakan Ajax
     function deleteData(url) {
         if (confirm('Yakin ingin menghapus data terpilih?')) {
             $.post(url, {

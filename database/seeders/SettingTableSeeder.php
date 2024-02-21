@@ -16,11 +16,11 @@ class SettingTableSeeder extends Seeder
     {
         DB::table('setting')->insert([
             'id_setting' => 1,
-            'nama_perusahaan' => 'Toko Ku',
-            'alamat' => 'Jl. Kibandang Samaran Ds. Slangit',
+            'nama_perusahaan' => 'Sumberbiru',
+            'alamat' => 'Wonomerto',
             'telepon' => '081234779987',
             'tipe_nota' => 1, // kecil
-            'diskon' => 5,
+            'diskon' => 0,
             'path_logo' => '/img/logo.png',
             'path_kartu_member' => '/img/member.png',
         ]);

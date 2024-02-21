@@ -4,15 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Warung;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+
+    // Menampilkan halaman index user.
+
     public function index()
     {
-        return view('user.index');
+        // Mengambil semua data warung.
+        $warung = warung::all();
+
+        // / Mengembalikan view user.index dengan data warung.
+        return view('user.index', compact('warung'));
     }
 
+
+    // Mendapatkan data user untuk DataTables.
     public function data()
     {
         $user = User::isNotAdmin()->orderBy('id', 'desc')->get();
@@ -48,13 +58,16 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    //  Menyimpan data user baru.
     public function store(Request $request)
     {
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
-        $user->level = 2;
+        $user->level = $request->level;
+        $user->id_warung = $request->input('id_warung');
         $user->foto = '/img/user.jpg';
         $user->save();
 
@@ -67,6 +80,8 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    //  Menampilkan data user berdasarkan ID.
     public function show($id)
     {
         $user = User::find($id);
@@ -92,6 +107,8 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+    //  Mengupdate data user berdasarkan ID.
     public function update(Request $request, $id)
     {
         $user = User::find($id);
@@ -99,6 +116,8 @@ class UserController extends Controller
         $user->email = $request->email;
         if ($request->has('password') && $request->password != "") 
             $user->password = bcrypt($request->password);
+        $user->level = $request->level;
+        $user->id_warung = $request->id_warung;
         $user->update();
 
         return response()->json('Data berhasil disimpan', 200);
@@ -112,6 +131,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        // Menghapus data user berdasarkan ID.
         $user = User::find($id)->delete();
 
         return response(null, 204);
@@ -119,6 +139,7 @@ class UserController extends Controller
 
     public function profil()
     {
+        // Mengambil data profil user yang sedang login.
         $profil = auth()->user();
         return view('user.profil', compact('profil'));
     }

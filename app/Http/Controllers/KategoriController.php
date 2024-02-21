@@ -14,17 +14,20 @@ class KategoriController extends Controller
      */
     public function index()
     {
+        // Menampilkan tampilan indeks untuk kategori
         return view('kategori.index');
     }
 
     public function data()
     {
+        // Mengambil data kategori untuk ditampilkan dalam DataTables
         $kategori = Kategori::orderBy('id_kategori', 'desc')->get();
 
         return datatables()
             ->of($kategori)
             ->addIndexColumn()
             ->addColumn('aksi', function ($kategori) {
+                // Menambahkan tombol aksi pada setiap baris data
                 return '
                 <div class="btn-group">
                     <button onclick="editForm(`'. route('kategori.update', $kategori->id_kategori) .'`)" class="btn btn-xs btn-info btn-flat"><i class="fa fa-pencil"></i></button>
@@ -54,6 +57,7 @@ class KategoriController extends Controller
      */
     public function store(Request $request)
     {
+        // Menyimpan data kategori baru ke dalam database
         $kategori = new Kategori();
         $kategori->nama_kategori = $request->nama_kategori;
         $kategori->save();
@@ -69,6 +73,7 @@ class KategoriController extends Controller
      */
     public function show($id)
     {
+        // Mengambil data kategori berdasarkan ID dan mengembalikan respons JSON
         $kategori = Kategori::find($id);
 
         return response()->json($kategori);
@@ -94,6 +99,7 @@ class KategoriController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Memperbarui data kategori berdasarkan input dari formulir pengeditan
         $kategori = Kategori::find($id);
         $kategori->nama_kategori = $request->nama_kategori;
         $kategori->update();
@@ -109,6 +115,7 @@ class KategoriController extends Controller
      */
     public function destroy($id)
     {
+        // Menghapus data kategori berdasarkan ID dari database
         $kategori = Kategori::find($id);
         $kategori->delete();
 

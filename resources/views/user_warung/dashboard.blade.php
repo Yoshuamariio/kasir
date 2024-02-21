@@ -1,4 +1,4 @@
-@extends('layouts.master')
+{{-- @extends('layouts.master')
 
 @section('title')
     Dashboard
@@ -10,7 +10,7 @@
 @endsection
 
 {{-- Ini adalah Dashboard untuk user kasir --}}
-@section('content')
+{{-- @section('content')
 <!-- Small boxes (Stat box) -->
 <div class="row">
     <div class="col-lg-12">
@@ -19,7 +19,6 @@
                 <h1>Selamat Datang</h1>
                 <br><br>
                 <a href="{{ route('rolling.index') }}" class="btn btn-success btn-lg">Sistem Rolling</a>
-                {{-- <a href="{{ route('penjualan.index') }}" class="btn btn-success btn-lg">Riwayat</a> --}}
                 <a href="{{ route('laporan.index') }}" class="btn btn-success btn-lg">Laporan</a>
                 <br><br><br>
             </div>
@@ -27,4 +26,4 @@
     </div>
 </div>
 <!-- /.row (main row) -->
-@endsection
+@endsection --}} --}}

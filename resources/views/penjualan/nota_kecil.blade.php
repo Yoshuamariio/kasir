@@ -7,6 +7,7 @@
     <title>Nota Kecil</title>
 
     <?php
+    // Inline CSS styles untuk cetak
     $style = '
     <style>
         * {
@@ -30,17 +31,8 @@
         @media print {
             @page {
                 margin: 0;
-                size: 75mm 
-    ';
-    ?>
-    <?php 
-    $style .= 
-        ! empty($_COOKIE['innerHeight'])
-            ? $_COOKIE['innerHeight'] .'mm; }'
-            : '}';
-    ?>
-    <?php
-    $style .= '
+                size: 75mm; 
+            }
             html, body {
                 width: 70mm;
             }
@@ -51,19 +43,31 @@
     </style>
     ';
     ?>
+    
+    <?php 
+    // Tentukan innerHeight dan set cookie untuk itu
+    // $style .= 
+    //     !empty($_COOKIE['innerHeight'])
+    //         ? $_COOKIE['innerHeight'] .'mm; }'
+    //         : '}';
+    // ?>
 
     {!! $style !!}
 </head>
 <body onload="window.print()">
-    <button class="btn-print" style="position: absolute; right: 1rem; top: rem;" onclick="window.print()">Print</button>
+    <!-- Tombol Cetak -->
+    <button class="btn-print" style="position: absolute; right: 1rem; top: 1rem;" onclick="window.print()">Print</button>
+
+    <!-- Informasi Perusahaan -->
     <div class="text-center">
         <h3 style="margin-bottom: 5px;">{{ strtoupper($setting->nama_perusahaan) }}</h3>
         <p>{{ strtoupper($setting->alamat) }}</p>
     </div>
     <br>
+
+    <!-- Informasi Pelanggan -->
     <div>
         <p style="float: left; padding-right: 25px;">{{ $penjualan->nama_pelanggan }}</p>
-        {{-- <p style="float: left">{{ $member->id_member }}</p> --}}
     </div>
     <div>
         <p style="float: left;">{{ $penjualan->no_tempat_duduk }}</p>        
@@ -71,10 +75,16 @@
     <div>        
         <p style="float: right">{{ strtoupper(auth()->user()->name) }}</p>
     </div>
+    <div>        
+        {{-- <p style="float: right">{{ $sesi }}</p> --}}
+    </div>
     <div class="clear-both" style="clear: both;"></div>
+
+    <!-- Informasi Penjualan -->
     <p>No: {{ tambah_nol_didepan($penjualan->id_penjualan, 10) }}</p>
     <p class="text-center">===================================</p>
     
+    <!-- Rincian Penjualan -->
     <br>
     <table width="100%" style="border: 0;">
         @foreach ($detail as $item)
@@ -90,6 +100,10 @@
     </table>
     <p class="text-center">-----------------------------------</p>
 
+    <p>Keterangan: {{ $penjualan->keterangan }}</p>
+    <p class="text-center">-----------------------------------</p>
+
+    <!-- Ringkasan Penjualan -->
     <table width="100%" style="border: 0;">
         <tr>
             <td>Total Harga:</td>
@@ -120,18 +134,21 @@
     <p class="text-center">===================================</p>
     <p class="text-center">-- TERIMA KASIH --</p>
 
+    <!-- Script untuk menghitung dan mengatur cookie innerHeight -->
     <script>
         let body = document.body;
         let html = document.documentElement;
-        let height = Math.max(
-                body.scrollHeight, body.offsetHeight,
-                html.clientHeight, html.scrollHeight, html.offsetHeight
-            );
         
-        // const idmember = '{{ $member }}';
-        // console.log(idmember);
+        let height = Math.max(
+            body.scrollHeight, body.offsetHeight,
+            html.clientHeight, html.scrollHeight, html.offsetHeight
+        );
 
-
+        // let sesi =``
+        console.log({{$sesi}});
+        
+        
+        // Set cookie innerHeight
         document.cookie = "innerHeight=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         document.cookie = "innerHeight="+ ((height + 50) * 0.264583);
     </script>

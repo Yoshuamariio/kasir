@@ -76,13 +76,16 @@
 @push('scripts')
 <script>
     $(function () {
+        // Menangani perubahan pada input password lama
         $('#old_password').on('keyup', function () {
             if ($(this).val() != "") $('#password, #password_confirmation').attr('required', true);
             else $('#password, #password_confirmation').attr('required', false);
         });
 
+        // Menggunakan validator pada form profil
         $('.form-profil').validator().on('submit', function (e) {
             if (! e.preventDefault()) {
+                // Menggunakan AJAX untuk menyimpan perubahan profil
                 $.ajax({
                     url: $('.form-profil').attr('action'),
                     type: $('.form-profil').attr('method'),
@@ -92,6 +95,7 @@
                     contentType: false
                 })
                 .done(response => {
+                    // Menampilkan perubahan yang berhasil disimpan
                     $('[name=name]').val(response.name);
                     $('.tampil-foto').html(`<img src="{{ url('/') }}${response.foto}" width="200">`);
                     $('.img-profil').attr('src', `{{ url('/') }}/${response.foto}`);

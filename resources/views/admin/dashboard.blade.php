@@ -1,14 +1,19 @@
-@extends('layouts.master')
+{{-- // 1. Menggunakan Layout Master --}}
+@extends('layouts.master') 
 
+{{-- // 2. Menentukan Judul Halaman --}}
 @section('title')
     Dashboard
 @endsection
 
+{{-- 3. Breadcrumb --}}
 @section('breadcrumb')
     @parent
     <li class="active">Dashboard</li>
 @endsection
 
+
+{{-- 4. Isi Content --}}
 @section('content')
 <!-- Small boxes (Stat box) -->
 <div class="row">
@@ -46,14 +51,14 @@
         <!-- small box -->
         <div class="small-box bg-yellow">
             <div class="inner">
-                <h3>{{ $member }}</h3>
+                <h3>{{ $warung }}</h3>
 
                 <p>Total Warung</p>
             </div>
             <div class="icon">
                 <i class="fa fa-id-card"></i>
             </div>
-            <a href="{{ route('member.index') }}" class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{ route('warung.index') }}" class="small-box-footer">Lihat <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <!-- ./col -->
@@ -89,6 +94,7 @@
 <!-- /.row (main row) -->
 @endsection
 
+{{-- Kombinasi JS dan HTML untuk Script ChartJS dan Konfigurasi Grafik --}}
 @push('scripts')
 <!-- ChartJS -->
 <script src="{{ asset('AdminLTE-2/bower_components/chart.js/Chart.js') }}"></script>

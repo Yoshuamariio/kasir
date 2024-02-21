@@ -43,7 +43,26 @@
                             <span class="help-block with-errors"></span>
                         </div>
                     </div>
-                </div>
+                    <div class="form-group row">
+                        <label for="level" class="col-lg-3 col-lg-offset-1 control-label">Role</label>
+                        <div class="col-lg-6">
+                            <input type="number" name="level" id="level" class="form-control" required maxlength="1">
+                            <span class="help-block with-errors"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="id_warung" class="col-lg-3 col-lg-offset-1 control-label">Warung</label>
+                        <div class="col-lg-6">
+                            <select name="id_warung" id="id_warung" class="form-control" required>
+                                <option value="">Pilih warung</option>
+                                @foreach ($warung as $key => $item)
+                                <option value="{{ $item->id_warung }}">{{ $item->nama }}</option>
+                                @endforeach
+                            </select>
+                            <span class="help-block with-errors"></span>
+                        </div>
+                    </div>
+                    </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-flat btn-primary"><i class="fa fa-save"></i> Simpan</button>
                     <button type="button" class="btn btn-sm btn-flat btn-warning" data-dismiss="modal"><i class="fa fa-arrow-circle-left"></i> Batal</button>

@@ -15,10 +15,9 @@ class PenjualanController extends Controller
 {
     public function index()
     {
-        return view('penjualan.index');
+        return view('user_warung.transaksi');
     }
 
-    // Mengambil data penjualan untuk ditampilkan dalam DataTables.
     public function data()
     {
         $penjualan = Penjualan::with('warung')->orderBy('id_penjualan', 'desc')->get();
@@ -30,17 +29,17 @@ class PenjualanController extends Controller
                 return format_uang($penjualan->total_item);
             })
             ->addColumn('total_harga', function ($penjualan) {
-                return 'Rp. '. format_uang($penjualan->total_harga);
+                return 'Rp. ' . format_uang($penjualan->total_harga);
             })
             ->addColumn('bayar', function ($penjualan) {
-                return 'Rp. '. format_uang($penjualan->bayar);
+                return 'Rp. ' . format_uang($penjualan->bayar);
             })
             ->addColumn('tanggal', function ($penjualan) {
                 return tanggal_indonesia($penjualan->created_at, false);
             })
             ->addColumn('kode_warung', function ($penjualan) {
                 $warung = $penjualan->warung->kode_warung ?? '';
-                return '<span class="label label-success">'. $warung .'</spa>';
+                return '<span class="label label-success">' . $warung . '</spa>';
             })
             ->editColumn('diskon', function ($penjualan) {
                 return $penjualan->diskon . '%';
@@ -51,16 +50,14 @@ class PenjualanController extends Controller
             ->addColumn('aksi', function ($penjualan) {
                 return '
                 <div class="btn-group">
-                    <button onclick="showDetail(`'. route('penjualan.show', $penjualan->id_penjualan) .'`)" class="btn btn-xs btn-info btn-flat"><i class="fa fa-eye"></i></button>
-                    <button onclick="deleteData(`'. route('penjualan.destroy', $penjualan->id_penjualan) .'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button>
+                    <button onclick="showDetail(`' . route('penjualan.show', $penjualan->id_penjualan) . '`)" class="btn btn-xs btn-info btn-flat"><i class="fa fa-eye"></i></button>
+                    <button onclick="deleteData(`' . route('penjualan.destroy', $penjualan->id_penjualan) . '`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button>
                 </div>
                 ';
             })
             ->rawColumns(['aksi', 'kode_warung'])
             ->make(true);
     }
-
-    // Membuat transaksi penjualan baru dan mengarahkan ke halaman transaksi.
 
     public function create()
     {
@@ -69,7 +66,7 @@ class PenjualanController extends Controller
         $penjualan->total_item = 0;
         $penjualan->total_harga = 0;
         $penjualan->nama_pelanggan = '';
-        $penjualan->no_tempat_duduk = 0;        
+        $penjualan->no_tempat_duduk = 0;
         $penjualan->bayar = 0;
         $penjualan->diterima = 0;
         $penjualan->keterangan = '';
@@ -81,11 +78,9 @@ class PenjualanController extends Controller
         return redirect()->route('transaksi.index');
     }
 
-    // Menyimpan data transaksi penjualan.
-
     public function store(Request $request)
     {
-        
+
 
         $penjualan = Penjualan::findOrFail($request->id_penjualan);
         $penjualan->id_warung = $request->id_warung;
@@ -97,7 +92,7 @@ class PenjualanController extends Controller
         $penjualan->diterima = $request->diterima;
         $penjualan->keterangan = $request->keterangan;
         $penjualan->update();
-        
+
         $detail = PenjualanDetail::where('id_penjualan', $penjualan->id_penjualan)->get();
         foreach ($detail as $item) {
             $item->update();
@@ -105,11 +100,9 @@ class PenjualanController extends Controller
             $produk = Produk::find($item->id_produk);
             $produk->update();
         }
-        
+
         return redirect()->route('transaksi.selesai');
     }
-
-    // Menampilkan detail transaksi penjualan.
 
     public function show($id)
     {
@@ -119,25 +112,23 @@ class PenjualanController extends Controller
             ->of($detail)
             ->addIndexColumn()
             ->addColumn('kode_produk', function ($detail) {
-                return '<span class="label label-success">'. $detail->produk->kode_produk .'</span>';
+                return '<span class="label label-success">' . $detail->produk->kode_produk . '</span>';
             })
             ->addColumn('nama_produk', function ($detail) {
                 return $detail->produk->nama_produk;
             })
             ->addColumn('harga_jual', function ($detail) {
-                return 'Rp. '. format_uang($detail->harga_jual);
+                return 'Rp. ' . format_uang($detail->harga_jual);
             })
             ->addColumn('jumlah', function ($detail) {
                 return format_uang($detail->jumlah);
             })
             ->addColumn('subtotal', function ($detail) {
-                return 'Rp. '. format_uang($detail->subtotal);
+                return 'Rp. ' . format_uang($detail->subtotal);
             })
             ->rawColumns(['kode_produk'])
             ->make(true);
     }
-
-    // Menghapus transaksi penjualan dan detailnya.
 
     public function destroy($id)
     {
@@ -157,23 +148,21 @@ class PenjualanController extends Controller
         return response(null, 204);
     }
 
-    // Menampilkan halaman nota kecil.
-
     public function notaKecil()
     {
         $setting = Setting::first();
         $penjualan = Penjualan::find(session('id_penjualan'));
-        if (! $penjualan) {
+        if (!$penjualan) {
             abort(404);
         }
         $detail = PenjualanDetail::with('produk')
             ->where('id_penjualan', session('id_penjualan'))
             ->get();
-        
+
         $warung = Warung::find(session('id_warung'));
         $sesi = session('id_warung');
         // $sesi = session('id_penjualan');
-        
+
         return view('penjualan.nota_kecil', compact('setting', 'penjualan', 'detail', 'warung', 'sesi'));
     }
 
@@ -192,9 +181,6 @@ class PenjualanController extends Controller
     //     $pdf->setPaper(0,0,609,440, 'potrait');
     //     return $pdf->stream('Transaksi-'. date('Y-m-d-his') .'.pdf');
     // }
-
-        // Menampilkan halaman selesai transaksi.
-
     public function selesai()
     {
         $setting = Setting::first();
@@ -243,24 +229,7 @@ class PenjualanController extends Controller
         $fileLoc = 'app/' . $fileName;
 
 
-//      Metode index: Menampilkan halaman penjualan.
-
-//      Metode data: Mengambil data penjualan untuk ditampilkan dalam DataTables.
-
-//      Metode create: Membuat transaksi penjualan baru dan mengarahkan ke halaman transaksi.
-
-//      Metode store: Menyimpan data transaksi penjualan.
-
-//      Metode show: Menampilkan detail transaksi penjualan.
-
-//      Metode destroy: Menghapus transaksi penjualan dan detailnya.
-
-//      Metode notaKecil: Menampilkan halaman nota kecil.
-
-//      Metode selesai: Menampilkan halaman selesai transaksi.
-
-
         // Pass data to the view
-        return view('penjualan.selesai', compact('setting', 'fileLoc', 'currentWarung','nextWarung'));
+        return view('penjualan.selesai', compact('setting', 'fileLoc', 'currentWarung', 'nextWarung'));
     }
 }

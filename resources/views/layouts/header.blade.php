@@ -1,7 +1,8 @@
+<!-- Bagian Header: Menampilkan Logo dan Navigasi -->
 <header class="main-header">
     <!-- Logo -->
     <a href="index2.html" class="logo">
-        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <!-- mini logo untuk sidebar dengan huruf pertama dari setiap kata dalam nama perusahaan -->
         @php
             $words = explode(' ', $setting->nama_perusahaan);
             $word  = '';
@@ -10,43 +11,44 @@
             }
         @endphp
         <span class="logo-mini">{{ $word }}</span>
-        <!-- logo for regular state and mobile devices -->
+        <!-- logo besar untuk tampilan reguler dan perangkat mobile dengan nama lengkap perusahaan -->
         <span class="logo-lg"><b>{{ $setting->nama_perusahaan }}</b></span>
     </a>
-    <!-- Header Navbar: style can be found in header.less -->
+    <!-- Navigasi Header -->
     <nav class="navbar navbar-static-top">
-        <!-- Sidebar toggle button-->
+        <!-- Tombol untuk menyembunyikan atau menampilkan sidebar -->
         <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
             <span class="sr-only">Toggle navigation</span>
         </a>
-
+        <!-- Area untuk menambahkan menu tambahan di navbar -->
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-                <!-- User Account: style can be found in dropdown.less -->
+                <!-- Dropdown User Menu -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="{{ url(auth()->user()->foto ?? '') }}" class="user-image img-profil"
-                            alt="User Image">
+                        <!-- Gambar profil pengguna, nama, dan dropdown menu -->
+                        <img src="{{ url(auth()->user()->foto ?? '') }}" class="user-image img-profil" alt="User Image">
                         <span class="hidden-xs">{{ auth()->user()->name }}</span>
                     </a>
+                    <!-- Dropdown Menu User -->
                     <ul class="dropdown-menu">
-                        <!-- User image -->
+                        <!-- Header Dropdown Menu -->
                         <li class="user-header">
-                            <img src="{{ url(auth()->user()->foto ?? '') }}" class="img-circle img-profil"
-                                alt="User Image">
-
+                            <!-- Gambar profil pengguna, nama, dan email -->
+                            <img src="{{ url(auth()->user()->foto ?? '') }}" class="img-circle img-profil" alt="User Image">
                             <p>
                                 {{ auth()->user()->name }} - {{ auth()->user()->email }}
                             </p>
                         </li>
-                        <!-- Menu Footer-->
+                        <!-- Footer Dropdown Menu -->
                         <li class="user-footer">
-                            <div class="pull-left">
+                            <!-- Tombol untuk menuju halaman Profil -->
+                            {{-- <div class="pull-left">
                                 <a href="{{ route('user.profil') }}" class="btn btn-default btn-flat">Profil</a>
-                            </div>
+                            </div> --}}
+                            <!-- Tombol untuk logout -->
                             <div class="pull-right">
-                                <a href="#" class="btn btn-default btn-flat"
-                                    onclick="$('#logout-form').submit()">Keluar</a>
+                                <a href="#" class="btn btn-default btn-flat" onclick="$('#logout-form').submit()">Keluar</a>
                             </div>
                         </li>
                     </ul>
@@ -56,6 +58,7 @@
     </nav>
 </header>
 
+<!-- Formulir Logout -->
 <form action="{{ route('logout') }}" method="post" id="logout-form" style="display: none;">
     @csrf
 </form>
